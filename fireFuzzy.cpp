@@ -38,7 +38,10 @@ public:
     int timer;
     int upwardMovementTimer;
     int downwardMovementTimer;
+    int leftwardMovementTimer;
+    int rightwardMovementTimer;
     bool upOrDown;
+    bool leftOrRight;
     bool haveIShot;
     S16Vec nullRot = {0,0,0}; // For effects
     Vec efScale = {0.05f, 0.05f, 0.05f};
@@ -50,19 +53,27 @@ public:
 
     dStageActor_c* goomba; // <- These were used for testing
     Vec goombapos;
+    // this->goombapos = (Vec){pos.x, pos.y - 32, pos.z}; // <-Use these to test things
+    // this->goomba = CreateActor(EN_KURIBO, 0, this->goombapos, 0, 0);
 
     USING_STATES(daFireFuzzy_c);
     DECLARE_STATE(MoveUp);
     DECLARE_STATE(MoveDown);
+    DECLARE_STATE(MoveLeft);
+    DECLARE_STATE(MoveRight);
     DECLARE_STATE(Stop);
+    DECLARE_STATE(Stationary); // Accessed *only* if howAmIMoving == 4
     DECLARE_STATE(Shoot);
     DECLARE_STATE(Die);
 };
 
 CREATE_STATE(daFireFuzzy_c, MoveUp);
 CREATE_STATE(daFireFuzzy_c, MoveDown);
+CREATE_STATE(daFireFuzzy_c, MoveLeft);
+CREATE_STATE(daFireFuzzy_c, MoveRight);
 CREATE_STATE(daFireFuzzy_c, Stop);
 CREATE_STATE(daFireFuzzy_c, Shoot);
+CREATE_STATE(daFireFuzzy_c, Stationary);
 CREATE_STATE(daFireFuzzy_c, Die);
 
 // Collisions
@@ -142,7 +153,7 @@ daFireFuzzy_c* daFireFuzzy_c::build() {
 }
 int daFireFuzzy_c::onCreate() {
 
-    howAmIMoving = (settings >> 16 & 0xFFFF); // idk how this works yet but i'll figure it out
+    howAmIMoving = (settings >> 28 & 0xF); // idk how this works yet but i'll figure it out
 
     allocator.link(-1, GameHeaps[0], 0, 0x20);
 
@@ -175,13 +186,37 @@ int daFireFuzzy_c::onCreate() {
 
 	bindAnimChr_and_setUpdateRate("run", 1, 0.0, 1.0);
 
-    if (howAmIMoving == 4) {
-        doStateChange(&StateID_Stop);
-    }
-    else if (howAmIMoving == 0 || howAmIMoving == 1) {
-    doStateChange(&StateID_MoveUp);
+    switch (howAmIMoving) {
+        case 0: {
+            this->upOrDown = false;
+            doStateChange(&StateID_MoveUp);
+            break;
+        }
+        case 1: {
+            this->upOrDown = true;
+            doStateChange(&StateID_MoveDown);
+            break;
+        }
+        case 2: {
+            this->leftOrRight = false;
+            doStateChange(&StateID_MoveLeft);
+            break;
+        }
+        case 3: {
+            this->leftOrRight = true;
+            doStateChange(&StateID_MoveRight);
+            break;
+        }
+        case 4: {
+            doStateChange(&StateID_Stationary);
+            break;
+        }
+        default: {
+            doStateChange(&StateID_Die);
+        }
     }
 
+  
     this->onExecute();
     return true;
 }
@@ -247,7 +282,6 @@ void daFireFuzzy_c::executeState_MoveDown() {
     if (gfxTimer == 30) {
         gfxTimer = 0;
         SpawnEffect("Wm_mr_fireball_hit", 0, &this->pos, &nullRot, &oneVec);
-        
     }
     this->pos.y -=1;
     this->timer +=1;
@@ -255,41 +289,93 @@ void daFireFuzzy_c::executeState_MoveDown() {
     this->downwardMovementTimer +=1;
 }
 void daFireFuzzy_c::endState_MoveDown() { }
-
-    // Stop (or stationary) state
+    // Leftwards movement state
+void daFireFuzzy_c::beginState_MoveLeft() {
+    this->timer = 0;
+    this->leftwardMovementTimer = 0;
+    bindAnimChr_and_setUpdateRate("run", 1, 0.0, 1.0);
+}
+void daFireFuzzy_c::executeState_MoveLeft() {
+    if (leftwardMovementTimer == 150) {
+        this->leftwardMovementTimer = 0;
+        doStateChange(&StateID_Stop);
+    }
+    if (gfxTimer == 30) {
+        gfxTimer = 0;
+        SpawnEffect("Wm_mr_fireball_hit", 0, &this->pos, &nullRot, &oneVec);
+    }
+    this->pos.x -=1;
+    this->timer +=1;
+    this->gfxTimer +=1;
+    this->leftwardMovementTimer +=1;
+}
+void daFireFuzzy_c::endState_MoveLeft() { }
+    // Rightwards movement state
+void daFireFuzzy_c::beginState_MoveRight() {
+    this->timer = 0;
+    this->rightwardMovementTimer = 0;
+    bindAnimChr_and_setUpdateRate("run", 1, 0.0, 1.0);
+}    
+void daFireFuzzy_c::executeState_MoveRight() {
+    if (rightwardMovementTimer == 150) {
+        this->rightwardMovementTimer = 0;
+        doStateChange(&StateID_Stop);
+    }
+    if (gfxTimer == 30) {
+        gfxTimer = 0;
+        SpawnEffect("Wm_mr_fireball_hit", 0, &this->pos, &nullRot, &oneVec);
+    }
+    this->pos.x +=1;
+    this->timer +=1;
+    this->gfxTimer +=1;
+    this->rightwardMovementTimer +=1;
+}
+void endState_MoveRight() { }
+    // Stop state
 void daFireFuzzy_c::beginState_Stop() {
     this->timer = 0;
     this->upwardMovementTimer = 0;
     this->downwardMovementTimer = 0;
-
+    this->leftwardMovementTimer = 0;
+    this->rightwardMovementTimer = 0;
 }
-
 void daFireFuzzy_c::executeState_Stop() {
     
     if (timer == 120 && !haveIShot) { // After 2 seconds of staying still and having not shot before...
         doStateChange(&StateID_Shoot);
     }
     if (timer == 150) { // After 2.5 seconds of staying still after having shot...
-        if (howAmIMoving == 0 || howAmIMoving == 1) { // If moving up or down
+        if (howAmIMoving == 0 || howAmIMoving == 1) {
             if (upOrDown) {
-            this->upOrDown = false;
-            haveIShot = false;
-            // this->goombapos = (Vec){pos.x, pos.y - 32, pos.z};
-            // this->goomba = CreateActor(EN_KURIBO, 0, this->goombapos, 0, 0); <- this was used for testing
-            doStateChange(&StateID_MoveUp);
+                this->upOrDown = false;
+                haveIShot = false;
+                // this->goombapos = (Vec){pos.x, pos.y - 32, pos.z};
+                // this->goomba = CreateActor(EN_KURIBO, 0, this->goombapos, 0, 0); <- this was used for testing
+                doStateChange(&StateID_MoveUp);
             }
             else {
-            this->upOrDown = true;
-            haveIShot = false;
-            doStateChange(&StateID_MoveDown);
+                this->upOrDown = true;
+                haveIShot = false;
+                doStateChange(&StateID_MoveDown);
             }
         }
-        // else if 2 or 3
-        else if (howAmIMoving == 4) {
-            doStateChange(&StateID_Shoot);
+        else if (howAmIMoving == 2 || howAmIMoving == 3) { // howAmIMoving is 2 or 3
+            if (leftOrRight) {
+                this->leftOrRight = false;
+                haveIShot = false;
+                doStateChange(&StateID_MoveLeft);
+            }
+            else {
+                this->leftOrRight = true;
+                haveIShot = false;
+                doStateChange(&StateID_MoveRight);
+            }
         }
+        else {
+            doStateChange(&StateID_Die); // If it's broken, it shouldn't crash the game. If it does then lol i'll fix it eventually.
+        }
+            
     }
-    
     this->timer += 1;
 
 }
@@ -328,14 +414,32 @@ void daFireFuzzy_c::executeState_Shoot() {
 
         haveIShot = true;
     }
-    if (timer == 30)
-        doStateChange(&StateID_Stop);
+    if (timer == 30) {
+        if (howAmIMoving == 4) {
+            doStateChange(&StateID_Stationary);
+        }
+        else {
+            doStateChange(&StateID_Stop);
+        }
+    }
     this->timer +=1;
 }
 
 
 void daFireFuzzy_c::endState_Shoot() { }
 
+    // Stationary state (howAmIMoving == 4)
+void daFireFuzzy_c::beginState_Stationary() { 
+    this->timer = 0;
+    
+}
+void daFireFuzzy_c::executeState_Stationary() {
+    if (timer == 300) { // After 5 seconds of not shooting
+        doStateChange(&StateID_Shoot);
+    }
+    this->timer +=1;
+}
+void daFireFuzzy_c::endState_Stationary() { }
     // Die State
 void daFireFuzzy_c::beginState_Die() {
     this->timer = 0;
