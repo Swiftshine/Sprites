@@ -1,8 +1,8 @@
 #include <game.h>
 #include <sfx.h>
 #include <g3dhax.h>
-const char* RedPlusANL [] = { "I_star", "kuribo", NULL };
 
+const char* RedPlusANL [] = { "I_star", "kuribo", NULL };
 class daRedPlusStar_c : public dEn_c {
 public:
     int onCreate();
@@ -16,19 +16,19 @@ public:
     static daRedPlusStar_c* build();
 
     void playerCollision(ActivePhysics *apThis, ActivePhysics *apOther);    
-    // bool collisionCat3_StarPower(ActivePhysics *apThis, ActivePhysics *apOther);
-    // bool collisionCat5_Mario(ActivePhysics *apThis, ActivePhysics *apOther); 
-	// bool collisionCatD_Drill(ActivePhysics *apThis, ActivePhysics *apOther); 
+    bool collisionCat3_StarPower(ActivePhysics *apThis, ActivePhysics *apOther);
+    bool collisionCat5_Mario(ActivePhysics *apThis, ActivePhysics *apOther); 
+	bool collisionCatD_Drill(ActivePhysics *apThis, ActivePhysics *apOther); 
 	//bool collisionCat8_FencePunch(ActivePhysics *apThis, ActivePhysics *apOther); 
-	// bool collisionCat7_GroundPound(ActivePhysics *apThis, ActivePhysics *apOther); 
-	// bool collisionCat7_GroundPoundYoshi(ActivePhysics *apThis, ActivePhysics *apOther); 
-	// bool collisionCatA_PenguinMario(ActivePhysics *apThis, ActivePhysics *apOther); 
-	// bool collisionCat11_PipeCannon(ActivePhysics *apThis, ActivePhysics *apOther); 
+	bool collisionCat7_GroundPound(ActivePhysics *apThis, ActivePhysics *apOther); 
+	bool collisionCat7_GroundPoundYoshi(ActivePhysics *apThis, ActivePhysics *apOther); 
+	bool collisionCatA_PenguinMario(ActivePhysics *apThis, ActivePhysics *apOther); 
+	bool collisionCat11_PipeCannon(ActivePhysics *apThis, ActivePhysics *apOther); 
 	bool collisionCat9_RollingObject(ActivePhysics *apThis, ActivePhysics *apOther); 
-	// bool collisionCat1_Fireball_E_Explosion(ActivePhysics *apThis, ActivePhysics *apOther); 
-	// bool collisionCat2_IceBall_15_YoshiIce(ActivePhysics *apThis, ActivePhysics *apOther); 
-	// bool collisionCat13_Hammer(ActivePhysics *apThis, ActivePhysics *apOther); 
-	// bool collisionCat14_YoshiFire(ActivePhysics *apThis, ActivePhysics *apOther);
+	bool collisionCat1_Fireball_E_Explosion(ActivePhysics *apThis, ActivePhysics *apOther); 
+	bool collisionCat2_IceBall_15_YoshiIce(ActivePhysics *apThis, ActivePhysics *apOther); 
+	bool collisionCat13_Hammer(ActivePhysics *apThis, ActivePhysics *apOther); 
+	bool collisionCat14_YoshiFire(ActivePhysics *apThis, ActivePhysics *apOther);
 
     mHeapAllocator_c allocator;
     m3d::mdl_c bodyModel;
@@ -58,13 +58,67 @@ public:
     DECLARE_STATE(Existing);
     DECLARE_STATE(Collected);
 };
-// not finished, don't forget to add to NewerProjectKP or whaterv
-// and also replace an actor, very important
+
+CREATE_STATE(daRedPlusStar_c, Existing);
+CREATE_STATE(daRedPlusStar_c, Collected);
+
+
 
 void daRedPlusStar_c::playerCollision(ActivePhysics *apThis, ActivePhysics *apOther) {
+    this->collectionCount +=1;
+    if (this->collectionCount == 5) {
+        // this->collectionCount = 0;
+        this->goombapos = (Vec){pos.x, pos.y + 32, pos.z}; // <-Use these to test things
+        this->goomba = CreateActor(EN_KURIBO, 0, this->goombapos, 0, 0);
+    }
     doStateChange(&StateID_Collected);
 }
+bool daRedPlusStar_c::collisionCat5_Mario(ActivePhysics *apThis, ActivePhysics *apOther) {
+    
+    doStateChange(&StateID_Collected);
+    return true;
+}
+bool daRedPlusStar_c::collisionCatD_Drill(ActivePhysics *apThis, ActivePhysics *apOther) {
+    doStateChange(&StateID_Collected);
+    return true;
+}
+bool daRedPlusStar_c::collisionCat7_GroundPound(ActivePhysics *apThis, ActivePhysics *apOther) {
+    doStateChange(&StateID_Collected);
+    return true;
+}
+bool daRedPlusStar_c::collisionCatA_PenguinMario(ActivePhysics *apThis, ActivePhysics *apOther) {
+    doStateChange(&StateID_Collected);
+    return true;
+}
+bool daRedPlusStar_c::collisionCat3_StarPower(ActivePhysics *apThis, ActivePhysics *apOther) {
+    doStateChange(&StateID_Collected);
+    return true;
+}
+bool daRedPlusStar_c::collisionCat11_PipeCannon(ActivePhysics *apThis, ActivePhysics *apOther) {
+    doStateChange(&StateID_Collected);
+    return true;
+}
 bool daRedPlusStar_c::collisionCat9_RollingObject(ActivePhysics *apThis, ActivePhysics *apOther) {
+    doStateChange(&StateID_Collected);
+    return true;
+}
+bool daRedPlusStar_c::collisionCat1_Fireball_E_Explosion(ActivePhysics *apThis, ActivePhysics *apOther) {
+    // do nothing probably
+    return true;
+}
+bool daRedPlusStar_c::collisionCat13_Hammer(ActivePhysics *apThis, ActivePhysics *apOther) {
+    // do nothing probably
+    return true;
+}
+bool daRedPlusStar_c::collisionCat14_YoshiFire(ActivePhysics *apThis, ActivePhysics *apOther) {
+    // do nothing probably
+    return true;
+}
+bool daRedPlusStar_c::collisionCat2_IceBall_15_YoshiIce(ActivePhysics *apThis, ActivePhysics *apOther) {
+    // do nothing probably
+    return true;
+}
+bool daRedPlusStar_c::collisionCat7_GroundPoundYoshi(ActivePhysics *apThis, ActivePhysics *apOther) {
     doStateChange(&StateID_Collected);
     return true;
 }
@@ -106,9 +160,9 @@ int daRedPlusStar_c::onCreate() {
 
     ActivePhysics::Info HitMeBaby;
     HitMeBaby.xDistToCenter = 0.0; 
-	HitMeBaby.yDistToCenter = 0.0; 
-    HitMeBaby.xDistToEdge = 1.0; 
-	HitMeBaby.yDistToEdge = 1.0; 
+	HitMeBaby.yDistToCenter = 8.0; 
+    HitMeBaby.xDistToEdge = 8.0; 
+	HitMeBaby.yDistToEdge = 8.0; 
 	HitMeBaby.category1 = 0x3; 
 	HitMeBaby.category2 = 0x0; 
 	HitMeBaby.bitfield1 = 0x4F; 
@@ -135,12 +189,6 @@ int daRedPlusStar_c::onExecute() {
     if (this->animationChr.isAnimationDone()) {
         this->animationChr.setCurrentFrame(0.0);
     }
-
-    if (this->collectionCount == 5) {
-        this->collectionCount = 0;
-        this->goombapos = (Vec){pos.x, pos.y + 32, pos.z}; // <-Use these to test things
-    this->goomba = CreateActor(EN_KURIBO, 0, this->goombapos, 0, 0);
-    }
    
     return true;
 }
@@ -159,6 +207,7 @@ void daRedPlusStar_c::beginState_Existing() {
     bindAnimChr_and_setUpdateRate("wait2", 1, 0.0, 0.0);
 }
 void daRedPlusStar_c::executeState_Existing() {
+    
     this->timer +=1;
 }
 void daRedPlusStar_c::endState_Existing() { }
@@ -166,11 +215,12 @@ void daRedPlusStar_c::endState_Existing() { }
     // Collected
 void daRedPlusStar_c::beginState_Collected() {
     this->timer = 0;
-    this->collectionCount +=1;
     PlaySound(this, SE_EMY_DOWN); // testing
     this->removeMyActivePhysics();
+   
 }
 void daRedPlusStar_c::executeState_Collected() {
+    
     this->Delete(1);
     this->timer +=1;
 }
