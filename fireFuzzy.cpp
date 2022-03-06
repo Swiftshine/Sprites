@@ -48,6 +48,10 @@ public:
 	Vec oneVec = {1.0f, 1.0f, 1.0f};
     bool wasShotWithIce; // Did I get hit by an ice projectile?
     int gfxTimer;
+    int speedMultiplier = (settings >> 24 & 0xF); // Nybble 6
+    int speed = 1;
+
+    void handleSomeOptions();
 
     dStageActor_c* goomba; // <- These were used for testing
     Vec goombapos;
@@ -65,6 +69,13 @@ CREATE_STATE(daFireFuzzy_c, Move);
 CREATE_STATE(daFireFuzzy_c, Stop);
 CREATE_STATE(daFireFuzzy_c, Shoot);
 CREATE_STATE(daFireFuzzy_c, Die);
+
+// Misc Functions
+void daFireFuzzy_c::handleSomeOptions() {
+    if (this->speedMultiplier != 0) {
+    this->speed = this->speed * this->speedMultiplier;
+    }
+}
 
 // Collisions
 void daFireFuzzy_c::playerCollision(ActivePhysics *apThis, ActivePhysics *apOther) {
@@ -173,6 +184,8 @@ int daFireFuzzy_c::onCreate() {
 
 	bindAnimChr_and_setUpdateRate("run", 1, 0.0, 1.0);
 
+    handleSomeOptions();
+
     switch (settings >> 28 & 0xF) { // Nybble 5
     // Value        Behavior
     // 0            Vertical movement; Up first
@@ -253,21 +266,21 @@ void daFireFuzzy_c::executeState_Move() {
 if (amIMoving) {
     if (this->verticalOrHorizontal != 2) { // If we are moving vertically...
         if (this->upOrDown) { //
-            this->pos.y -=1;
+            this->pos.y -=this->speed;
             this->haveIShot = false;
         }
         else { // ...and moving downwards...
-            this->pos.y +=1;
+            this->pos.y +=this->speed;
             this->haveIShot = false;
         }
     }
     else { // If we are moving horizontally...
         if (this->leftOrRight) { // 
-            this->pos.x +=1;
+            this->pos.x +=this->speed;
             this->haveIShot = false;
         }
         else { // ...and moving rightwards...
-            this->pos.x -=1;
+            this->pos.x -=this->speed;
             this->haveIShot = false;
         }
     }
@@ -285,7 +298,7 @@ if (amIMoving) {
     this->timer +=1;
     this->gfxTimer +=1;
     this->movementTimer +=1;
-}
+    }
 }
 
 void daFireFuzzy_c::endState_Move() { }
@@ -305,6 +318,11 @@ void daFireFuzzy_c::executeState_Stop() {
         this->leftOrRight = !this->leftOrRight;
         doStateChange(&StateID_Move);
     }
+
+    if (timer == 150 && !amIMoving) {
+        doStateChange(&StateID_Shoot);
+    }
+
     this->timer +=1;
 }
 
