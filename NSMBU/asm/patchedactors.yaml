@@ -1,0 +1,32 @@
+---
+Files:
+  - checkpointhacks.S.cpp
+Hooks:
+
+# assume the rest of patchedactors.yaml exists
+
+#* Checkpoint Hacks
+# Rotate checkpoint model on the Z axis according to nybble 21
+  - type: branch
+    instr: bl
+    addr: "0x02727F90"
+    func: RotateCheckpointModel
+    
+# # Rotate the checkpoint hitbox on the Z axis according to nybble 21
+#   - type: branch
+#     instr: bl
+#     addr: "0x02728064"
+#     func: RotateCheckpointHitbox
+
+# # Change the powerup the player recieves according to nybble 22
+#   # Player
+#   - type: branch
+#     instr: bl
+#     addr: "0x02728F24"
+#     func: ChangeGivenPowerup
+    
+#   # Player, whilst on Yoshi
+#   - type: branch
+#     instr: bl
+#     addr: "0x02728FA8"
+#     func: ChangeGivenPowerup

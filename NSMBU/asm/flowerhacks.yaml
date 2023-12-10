@@ -1,0 +1,36 @@
+---
+Files:
+  - flowerhacks.S
+Hooks:
+#   - type: branch
+#     instr: bl
+#     addr: "0x0268B48C"
+#     func: ChangeButterflyTexture
+  - type: branch
+    instr: bl
+    addr: "0x029DED6C"
+    func: StoreFlowerGrassInfo
+
+    #. Sky Textures 
+  - type: branch
+    instr: bl
+    addr: "0x0268A454"
+    func: SkyFlower1Texture
+
+  - type: branch
+    instr: bl
+    addr: "0x0268A470"
+    func: SkyFlower2Texture
+
+  - type: branch
+    instr: bl
+    addr: "0x0268A4AC"
+    func: SkyFlower3Texture
+
+
+    #. Standard Textures
+  - type: branch
+    instr: bl
+    addr: "0x0268A854"
+    func: StandardGrassTexture1
+  
