@@ -1,0 +1,2 @@
+# CourseTask
+    incrementCoinCounter__10CourseTaskFUiT1 = 0x24bfdb0;
