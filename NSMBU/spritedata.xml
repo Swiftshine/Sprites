@@ -1,0 +1,16 @@
+<!-- Environment Sprite -->
+
+<sprite id="[ID]" name="Environment Sprite">
+    <list nybble="1" title="Sprite Appearance">
+        <entry value="0">White Bird</entry>
+        <entry value="1">Parrot</entry>
+        <entry value="2">Blue Jay</entry>
+        <entry value="3">Rosefinch</entry>
+        <entry value="4">House Sparrow</entry>
+        <entry value="5">Crested Tit</entry>
+        <entry value="6">Lorikeet</entry>
+        <entry value="7">Crab</entry>
+    </list>
+    <value nybble="2" title="Crab Distance" comment="The distance travelled left/right is n + 1."/>
+    <checkbox nybble="3" title="Unnamed Value" comment="I don't remember what this is."/>
+</sprite>
