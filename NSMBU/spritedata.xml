@@ -1,3 +1,90 @@
+<!-- Checkpoint -->
+<sprite id="25" name="Checkpoint Flag" notes="When Mario collides with this flagpole, the game will set Mario's spawn point to it. The flag will turn into the color of the player (Mario = red, Luigi = green, YToad = yellow, BToad = blue) and will give the player who collides with it a mushroom. If a player dies in the same level, then the game will respawn all players at the flagpole. If someone decides to play another level or completes the level with the flagpole active, then the game will reset all memory in the flagpole and reset the spawn point location.">
+	<value nybble="5" title="Useless(?) Value 5" comment="This field is no longer even referenced in the code."/>
+	<value nybble="7-8" title="Entrance ID" comment="The entrance when the player will be spawned if he dies after reaching the midway flag."/>
+	<checkbox nybble="9" title="Can bounce on Bouncy Clouds"/>
+	<list nybble="10" title="Appears">
+		<entry value="0">Always</entry>
+		<entry value="1">Only if midway flag is not yet touched</entry>
+		<entry value="2">Only if midway flag is already touched</entry>
+	</list>
+	<checkbox nybble="11" title="Unknown Checkbox 11"/>
+	<checkbox nybble="11" title="Affected by gravity" mask="2"/>
+	<checkbox nybble="12" title="Second checkpoint (Uses Time Limit 3)" comment="Set this if this is the second midway point in the level. If unchecked, Time Limit 2 will be used instead."/>
+	<checkbox nybble="20" title="Spawn on ground"/>
+    <list nybble="21" title="Orientation">
+        <entry value="0">Upright</entry>
+        <entry value="1">Right</entry>
+        <entry value="2">Upside Down</entry>
+        <entry value="3">Left</entry>
+    </list>
+    <list nybble="22" title="Powerup" comment="This only applies to the player when small.">
+        <entry value="0">Big</entry>
+        <entry value="1">Fire</entry>
+        <entry value="2">Mini</entry>
+        <entry value="3">Propeller</entry>
+        <entry value="4">Penguin</entry>
+        <entry value="5">Ice</entry>
+        <entry value="6">Acorn</entry>
+        <entry value="7">P-Acorn</entry>
+        <entry value="8">None</entry>
+    </list>
+</sprite>
+
+<!-- Flower/Grass Setter -->
+<sprite id="564" name="Flower/Grass Type Setter" notes="This sprite changes the type of flowers that are used in the zone. If this sprite is not present in the zone, the standard flowers are used.">
+        <list nybble="5" title="Flower 1 Colour">
+            <entry value="0">Default</entry>
+            <entry value="1">Flower 2</entry>
+            <entry value="2">Flower 3</entry>
+            <entry value="3">Custom 1</entry>
+            <entry value="4">Custom 2</entry>
+            <entry value="5">Custom 3</entry>
+            <entry value="6">Custom 4</entry>
+            <entry value="7">Custom 5</entry>
+            <entry value="8">Custom 6</entry>
+            <!-- Custom entries will go here. -->
+        </list>
+        <list nybble="6" title="Flower 2 Colour">
+            <entry value="0">Default</entry>
+            <entry value="1">Flower 1</entry>
+            <entry value="2">Flower 3</entry>
+            <entry value="3">Custom 1</entry>
+            <entry value="4">Custom 2</entry>
+            <entry value="5">Custom 3</entry>
+            <entry value="6">Custom 4</entry>
+            <entry value="7">Custom 5</entry>
+            <entry value="8">Custom 6</entry>
+        </list>
+        <list nybble="7" title="Flower 3 Colour">
+            <entry value="0">Default</entry>
+            <entry value="1">Flower 1</entry>
+            <entry value="2">Flower 2</entry>
+            <entry value="3">Custom 1</entry>
+            <entry value="4">Custom 2</entry>
+            <entry value="5">Custom 3</entry>
+            <entry value="6">Custom 4</entry>
+            <entry value="7">Custom 5</entry>
+            <entry value="8">Custom 6</entry>
+        </list>
+        <list nybble="8" title="Butterfly Colour">
+            <entry value="0">Default</entry>
+            <entry value="1">Custom 1</entry>
+        </list>
+        <list nybble="9" title="Grass Colour">
+            <entry value="0">Default</entry>
+            <entry value="1">Custom 1</entry>
+        </list>
+		<list nybble="12" title="Type">
+			<entry value="0">Forest</entry>
+			<entry value="1">Forest (Big flowers)</entry>
+			<entry value="2">Underground</entry>
+			<entry value="3">Sky</entry>
+			<entry value="4">Sky (No butterflies)</entry>
+			<entry value="5">Standard</entry>
+		</list>
+</sprite>
+
 <!-- Environment Sprite -->
 
 <sprite id="[ID]" name="Environment Sprite">
@@ -13,4 +100,30 @@
     </list>
     <value nybble="2" title="Crab Distance" comment="The distance travelled left/right is n + 1."/>
     <checkbox nybble="3" title="Unnamed Value" comment="I don't remember what this is."/>
+</sprite>
+
+<!-- Multi Coin -->
+
+<sprite id="[ID]" name="Multi-Coin">
+        <list nybble="5" title="Coin Count" comment="When using random, the value will between 1 and 100, inclusive.">
+            <entry value="0">10</entry>
+            <entry value="1">20</entry>
+            <entry value="2">50</entry>
+            <entry value="3">100</entry>
+            <entry value="4">Random</entry>
+        </list>
+</sprite>
+
+<!-- Flipswitch Block -->
+
+<sprite id="775" name="Flipswitch Block">
+        <value nybble="1-2" title="Manager ID"/>
+        <checkbox nybble="3" title="Is Small"/>
+    </sprite>
+
+<!-- Flipswitch Block Manager -->
+    <sprite id="776" name="Flipswitch Block Manager">
+        <value nybble="1-2" title="Manager ID"/>
+        <value nybble="3-4" title="Target Event ID"/>
+        <value nybble="5-6" title="Target Count"/>
 </sprite>
