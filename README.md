@@ -9,6 +9,7 @@ These were made with NewerSMBW in mind, with 1.30 headers.
 ## NSMBU
 These were made with Tsuru in mind, made for my (now cancelled) NSMBU hack; "Super Mario Sunset".
 
-As of writing this, I haven't made the pull request to the [main Tsuru repo](https://github.com/Zenith-Team/Tsuru) yet, but I will in the future. (**Please don't try to make the pull request yourself, I will do that myself when I finish fixing some things.**)
+There are currently no plains to add these to the [main Tsuru repo](https://github.com/Zenith-Team/Tsuru). Please don't try to do it yourself, either.
+
 ### Resources
 These were pulled from old versions from when I was working on them, so they may or may not work.
