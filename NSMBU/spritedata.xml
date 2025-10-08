@@ -86,7 +86,6 @@
 </sprite>
 
 <!-- Environment Sprite -->
-
 <sprite id="[ID]" name="Environment Sprite">
     <list nybble="1" title="Sprite Appearance">
         <entry value="0">White Bird</entry>
@@ -103,7 +102,6 @@
 </sprite>
 
 <!-- Multi Coin -->
-
 <sprite id="[ID]" name="Multi-Coin">
         <list nybble="5" title="Coin Count" comment="When using random, the value will between 1 and 100, inclusive.">
             <entry value="0">10</entry>
@@ -115,14 +113,13 @@
 </sprite>
 
 <!-- Flipswitch Block -->
-
-<sprite id="775" name="Flipswitch Block">
+<sprite id="[ID]" name="Flipswitch Block">
         <value nybble="1-2" title="Manager ID"/>
         <checkbox nybble="3" title="Is Small"/>
     </sprite>
 
 <!-- Flipswitch Block Manager -->
-    <sprite id="776" name="Flipswitch Block Manager">
+    <sprite id="[ID]" name="Flipswitch Block Manager">
         <value nybble="1-2" title="Manager ID"/>
         <value nybble="3-4" title="Target Event ID"/>
         <value nybble="5-6" title="Target Count"/>
